@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-using std::cout, std::cin, std::endl, std::string;
+using std::cout, std::endl, std::string;
 
 class Node {
 public:
