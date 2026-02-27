@@ -9,6 +9,8 @@ private:
 
 public:
   void virtual calculateShape() = 0;
+
+  virtual ~Shape() {};
 };
 
 class Rectangle : public Shape {
@@ -43,7 +45,7 @@ public:
   Triangle(int a, int b, int c) : a(a), b(b), c(c) {}
 
   void calculateShape() override {
-    double s = (a + b + c) / 2;
+    double s = (a + b + c) / 2.0;
     cout << std::sqrt(s * ((s - a) * (s - b) * (s - c)));
   }
 };
