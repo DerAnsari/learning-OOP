@@ -3,14 +3,12 @@
 #include <string>
 #include <vector>
 
-// 1. Base Class (The Interface)
 class Logger {
 public:
   virtual void logMessage(const std::string &message) = 0; // Pure virtual
   virtual ~Logger() {} // Essential for polymorphic cleanup
 };
 
-// 2. Console Logger
 class ConsoleLogger : public Logger {
 public:
   void logMessage(const std::string &message) override {
@@ -18,7 +16,6 @@ public:
   }
 };
 
-// 3. File Logger
 class FileLogger : public Logger {
 private:
   std::string filename;
@@ -35,18 +32,15 @@ public:
   }
 };
 
-// 4. Database Logger (Simulated)
 class DatabaseLogger : public Logger {
 public:
   void logMessage(const std::string &message) override {
-    // In a real scenario, you'd connect to SQL here
     std::cout << "[DATABASE]: Executing INSERT INTO logs VALUES ('" << message
               << "')" << std::endl;
   }
 };
 
 int main() {
-  // We create a list of different loggers using the Base Class Pointer
   std::vector<Logger *> loggers;
 
   loggers.push_back(new ConsoleLogger());
@@ -57,12 +51,10 @@ int main() {
 
   std::cout << "--- Dispatching Log Message ---" << std::endl;
 
-  // Polymorphism in action: one call, different behaviors
   for (Logger *logger : loggers) {
     logger->logMessage(criticalError);
   }
 
-  // Cleanup
   for (Logger *logger : loggers) {
     delete logger;
   }
