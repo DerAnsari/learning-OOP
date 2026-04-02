@@ -1,63 +1,58 @@
-#include <fstream>
 #include <iostream>
 #include <string>
-#include <vector>
 
-class Logger {
+class PoweredSystem {
+protected:
+  int powerID;
+
 public:
-  virtual void logMessage(const std::string &message) = 0; // Pure virtual
-  virtual ~Logger() {} // Essential for polymorphic cleanup
+  PoweredSystem(int id) : powerID(id) {
+    std::cout << "PoweredSystem Constructor (ID: " << powerID << ")"
+              << std::endl;
+  }
+  virtual ~PoweredSystem() {}
 };
 
-class ConsoleLogger : public Logger {
+class Vehicle : public virtual PoweredSystem {
+protected:
+  std::string model;
+
 public:
-  void logMessage(const std::string &message) override {
-    std::cout << "[CONSOLE]: " << message << std::endl;
+  Vehicle(int id, std::string m) : PoweredSystem(id), model(m) {
+    std::cout << "Vehicle Constructor (" << model << ")" << std::endl;
   }
 };
 
-class FileLogger : public Logger {
-private:
-  std::string filename;
+class Engine : public virtual PoweredSystem {
+protected:
+  float horsepower;
 
 public:
-  FileLogger(std::string f) : filename(f) {}
-
-  void logMessage(const std::string &message) override {
-    std::ofstream file(filename, std::ios::app);
-    if (file.is_open()) {
-      file << "[FILE]: " << message << std::endl;
-      std::cout << "Successfully logged to file: " << filename << std::endl;
-    }
+  Engine(int id, float hp) : PoweredSystem(id), horsepower(hp) {
+    std::cout << "Engine Constructor (" << horsepower << " HP)" << std::endl;
   }
 };
 
-class DatabaseLogger : public Logger {
+class Car : public Vehicle, public Engine {
 public:
-  void logMessage(const std::string &message) override {
-    std::cout << "[DATABASE]: Executing INSERT INTO logs VALUES ('" << message
-              << "')" << std::endl;
+  Car(int id, std::string m, float hp)
+      : PoweredSystem(id), Vehicle(id, m), Engine(id, hp) {
+    std::cout << "Car Constructor Complete." << std::endl;
+  }
+
+  void displaySpecs() {
+    std::cout << "\n--- Car Specifications ---" << std::endl;
+    std::cout << "System ID: " << powerID << std::endl; // No ambiguity!
+    std::cout << "Model:     " << model << std::endl;
+    std::cout << "Power:     " << horsepower << " HP" << std::endl;
   }
 };
 
 int main() {
-  std::vector<Logger *> loggers;
+  std::cout << "Initializing Car object..." << std::endl;
+  Car myCar(999, "Tesla Model S", 1020.0f);
 
-  loggers.push_back(new ConsoleLogger());
-  loggers.push_back(new FileLogger("app_log.txt"));
-  loggers.push_back(new DatabaseLogger());
-
-  std::string criticalError = "System overheat detected!";
-
-  std::cout << "--- Dispatching Log Message ---" << std::endl;
-
-  for (Logger *logger : loggers) {
-    logger->logMessage(criticalError);
-  }
-
-  for (Logger *logger : loggers) {
-    delete logger;
-  }
+  myCar.displaySpecs();
 
   return 0;
 }
