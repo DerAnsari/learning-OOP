@@ -33,19 +33,16 @@ public:
   void addDetail(const string &d) { details += d + "\n"; }
   double getTotal() const { return total; }
 
-  // Overload + to combine bills (TC-02)
   Bill operator+(const Bill &other) const {
     Bill combined(this->total + other.total);
     combined.details = this->details + other.details;
     return combined;
   }
 
-  // Overload == to check if totals are equal (TC-02)
   bool operator==(const Bill &other) const {
     return this->total == other.total;
   }
 
-  // Overload << for readable summary (TC-02)
   friend std::ostream &operator<<(std::ostream &os, const Bill &bill) {
     os << "----- MediCore Bill -----\n"
        << bill.details << "TOTAL: PKR " << bill.total << "\n"
