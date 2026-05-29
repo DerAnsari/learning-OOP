@@ -1,5 +1,9 @@
 #include <iostream>
 #include <vector>
+#include <numeric>
+#include <algorithm>
+
+long long mergeComps = 0;
 
 void merge(std::vector<int>& arr, int left, int mid, int right) {
     std::vector<int> L(arr.begin() + left, arr.begin() + mid + 1);
@@ -7,6 +11,7 @@ void merge(std::vector<int>& arr, int left, int mid, int right) {
 
     int i = 0, j = 0, k = left;
     while (i < (int)L.size() && j < (int)R.size()) {
+        mergeComps++;
         if (L[i] <= R[j]) {
             arr[k++] = L[i++];
         } else {
@@ -25,21 +30,26 @@ void mergeSort(std::vector<int>& arr, int left, int right) {
     merge(arr, left, mid, right);
 }
 
-void printArray(const std::vector<int>& arr) {
-    std::cout << "[ ";
-    for (int x : arr) std::cout << x << " ";
-    std::cout << "]" << std::endl;
+void runTest(const std::string& label, std::vector<int> arr) {
+    mergeComps = 0;
+    mergeSort(arr, 0, arr.size() - 1);
+    std::cout << label << ": " << mergeComps << " comparisons" << std::endl;
 }
 
 int main() {
-    std::vector<int> data = {38, 27, 43, 3, 9};
-    std::cout << "Before: ";
-    printArray(data);
+    int n = 16;
+    std::vector<int> sorted(n), reversed(n), random(n);
     
-    mergeSort(data, 0, data.size() - 1);
+    std::iota(sorted.begin(), sorted.end(), 1);
     
-    std::cout << "After: ";
-    printArray(data);
+    reversed = sorted;
+    std::reverse(reversed.begin(), reversed.end());
     
+    random = {13, 1, 8, 3, 5, 2, 7, 10, 15, 4, 6, 11, 14, 9, 12, 16};
+
+    runTest("Already sorted", sorted);
+    runTest("Reverse sorted", reversed);
+    runTest("Random        ", random);
+
     return 0;
 }
